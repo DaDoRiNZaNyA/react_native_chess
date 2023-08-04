@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {Board} from '../models/Board';
 import CellComponent from './CellComponent';
@@ -8,6 +8,7 @@ import {Player} from '../models/Player';
 interface BoardProps {
   board: Board;
   currentPlayer: Player | null;
+  setBoard: (board: Board) => void;
   swapPlayer: () => void;
 }
 
@@ -15,16 +16,14 @@ const BoardComponent: React.FC<BoardProps> = ({
   board,
   currentPlayer,
   swapPlayer,
+  setBoard,
 }) => {
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
 
   function highlightCells() {
-    const newHighlightedCells = board.highlightCells(
-      selectedCell,
-      currentPlayer?.color,
-    );
-    //@ts-ignore
-    setSelectedCell(newHighlightedCells);
+    board.highlightCells(selectedCell, currentPlayer?.color);
+    const newBoard = board.getCopyBoard();
+    setBoard(newBoard);
   }
 
   function click(cell: Cell) {
@@ -44,15 +43,11 @@ const BoardComponent: React.FC<BoardProps> = ({
     }
   }
 
-  const memoizedHighlightCells = useCallback(highlightCells, [
-    board,
-    selectedCell,
-    currentPlayer,
-  ]);
-
   useEffect(() => {
-    memoizedHighlightCells();
-  }, [memoizedHighlightCells]);
+    if (selectedCell) {
+      highlightCells();
+    }
+  }, [selectedCell]);
 
   return (
     <TouchableWithoutFeedback onPress={() => setSelectedCell(null)}>

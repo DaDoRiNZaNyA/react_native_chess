@@ -21,6 +21,7 @@ interface PopupProps {
 
 const Popup: React.FC<PopupProps> = ({
   winPlayer,
+  restart,
   setWinPlayer,
   setStart,
   gameTime,
@@ -39,6 +40,7 @@ const Popup: React.FC<PopupProps> = ({
       setInputTime(inputValue.toString());
       setWinPlayer(null);
       setStart(1);
+      restart();
     } else {
       Alert.alert('Ошибка', 'Введите корректное число больше 10');
     }

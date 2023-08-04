@@ -53,7 +53,7 @@ function App() {
           restart();
         }
       }
-    }, 500);
+    }, 1000);
 
     return () => {
       clearInterval(checkmateInterval);
